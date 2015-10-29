@@ -1,0 +1,21 @@
+html {
+    padding: 0px;
+    margin: 0px;
+}
+
+body {
+    padding: 0px;
+    margin-top: 15%;
+    text-align: center;
+    background: #EA3B28;
+    background: -moz-radial-gradient( 50% 50%, circle, #EA3B28, #C13832);
+    background: -webkit-radial-gradient( 50% 25%, circle, #EA3B28, #C13832);
+    font-family: "Leckerli One", "Arial"
+}
+
+#wordmark {
+    font-size: 110px;
+    color: #4D4E53;
+    text-shadow: 0 2px 2px black;
+    font-weight: normal;
+}
