@@ -1,0 +1,35 @@
+machine:
+  services:
+    - docker
+  environment:
+    # Deis
+    DEIS_STAGE_APP: www-moz-works
+    DEIS_PROD_APP: www-moz-works-stage
+    DEIS_USERNAME: travis
+    DEIS_CONTROLLER: deis.eu-west.moz.works
+    # Docker
+    DOCKER_REPOSITORY: mozorg/www-moz-works
+    DOCKER_IMAGE_TAG: "$DOCKER_REPOSITORY:$CIRCLE_SHA1"
+    DOCKER_EMAIL: foo@example.com
+    DOCKER_USERNAME: moztravis
+dependencies:
+  cache_directories:
+    - "~/docker"
+  override:
+    - docker --version
+    - docker info
+    - if [[ -e ~/docker/image.tar ]]; then docker load --input ~/docker/image.tar; fi
+    - echo "ENV GIT_SHA ${CIRCLE_SHA1}" >> Dockerfile
+    - docker build -t "$DOCKER_IMAGE_TAG" --pull=true .
+    - mkdir -p ~/docker; docker save "$DOCKER_IMAGE_TAG" > ~/docker/image.tar
+deployment:
+  stage:
+    branch: master
+    owner: mozilla
+    commands:
+      - bin/deploy.sh www-moz-works-stage
+  prod:
+    tag: /\d{4}-\d{2}-\d{2}(\.\d)?/
+    owner: mozilla
+    commands:
+      - bin/deploy.sh www-moz-works
